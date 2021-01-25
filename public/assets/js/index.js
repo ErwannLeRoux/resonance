@@ -11,10 +11,11 @@ document.addEventListener("DOMContentLoaded", function() {
   ]
   let ctx                   = canvas.getContext('2d')
   let canvasController      = new Canvas(canvas, elements)
-  let reasonnanceController = new ReasonnanceController(elements)
+  let reasonnanceController = null
 
   playButton.addEventListener('click', function(e) {
+      /* Chrome doesn't allow audio context creation until user action */
+      if(!reasonnanceController) reasonnanceController =  new ReasonnanceController(elements)
       reasonnanceController.playAll()
   })
-
 });
