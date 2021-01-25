@@ -1,53 +1,20 @@
-$(document).ready(function() {
+import { Canvas } from './modules/canvas.js';
+import { ReasonnanceController } from './modules/reasonnance.js'
 
-    let $button = $("#play-btn")
-    $button.on('click', function() {
-        // Create an AudioContext
-        let audioContext = new AudioContext();
+document.addEventListener("DOMContentLoaded", function() {
+  let canvas                = document.querySelector("#scene-canvas")
+  let playButton            = document.querySelector("#play-btn")
+  let elements              = [
+      {x: 0, y: 0, path: "coeur"},
+      {x: 0, y: 0, path: "coeur"},
+      {x: 0, y: 0, path: "coeur"}
+  ]
+  let ctx                   = canvas.getContext('2d')
+  let canvasController      = new Canvas(canvas, elements)
+  let reasonnanceController = new ReasonnanceController(elements)
 
-        // Create a (first-order Ambisonic) Resonance Audio scene and pass it
-        // the AudioContext.
-        let resonanceAudioScene = new ResonanceAudio(audioContext);
+  playButton.addEventListener('click', function(e) {
+      reasonnanceController.playAll()
+  })
 
-        resonanceAudioScene.output.connect(audioContext.destination)
-
-        let roomDimensions = {
-          width: 3.1,
-          height: 2.5,
-          depth: 3.4,
-        };
-
-
-
-        let roomMaterials = {
-          // Room wall materials
-          left: 'brick-bare',
-          right: 'curtain-heavy',
-          front: 'marble',
-          back: 'glass-thin',
-          // Room floor
-          down: 'grass',
-          // Room ceiling
-          up: 'transparent',
-        };
-
-        // Create an AudioElement.
-        let audioElement = document.createElement('audio');
-
-        // Load an audio file into the AudioElement.
-        audioElement.src = 'public/audio/coeur.mp3';
-        audioElement.crossOrigin = 'anonymous';
-        audioElement.load();
-        audioElement.loop = true;
-
-        let audioElementSource = audioContext.createMediaElementSource(audioElement);
-
-        let source = resonanceAudioScene.createSource();
-        audioElementSource.connect(source.input);
-
-        source.setPosition(0, 0, 0);
-
-        // Play the audio.
-        audioElement.play();
-    })
-})
+});
