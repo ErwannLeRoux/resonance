@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", function() {
   let canvas                = document.querySelector("#scene-canvas")
   let playButton            = document.querySelector("#play-btn")
   let elements              = [
-      {x: 0, y: 0, path: "coeur"},
-      {x: 0, y: 0, path: "coeur"},
-      {x: 0, y: 0, path: "coeur"}
+      {x: 0.5, y: 0.5, path: "coeur"},
+      {x: 0.75, y: 0, path: "coeur"},
+      {x: 0, y: 0.75, path: "coeur"}
   ]
   let ctx                   = canvas.getContext('2d')
   let canvasController      = new Canvas(canvas, elements)
