@@ -22,7 +22,7 @@ export class ReasonnanceController {
 
         elements?.forEach(element => {
             let audioElement = document.createElement('audio');
-            audioElement.src = `public/audio/${element.path}.mp3`;
+            audioElement.src = `resources/audio/${element.path}.mp3`;
             audioElement.crossOrigin = 'anonymous';
             audioElement.load();
             audioElement.loop = true;

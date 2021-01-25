@@ -64,7 +64,7 @@ export class Canvas {
 
         for (let i = 0; i < this.elements.length; i++) {
             let icon = new Image(50, 50);
-            icon.src = 'public/assets/images/head.png';
+            icon.src = 'assets/images/head.png';
             if (icon !== undefined) {
                 let radiusInPixels = this.elements[i].radius * this.canvas.width;
                 let x = this.elements[i].x * this.canvas.width - radiusInPixels;
