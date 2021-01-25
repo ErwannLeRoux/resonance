@@ -1,0 +1,7 @@
+{
+  "name": "reasonnance",
+  "version": "1.0.0",
+  "dependencies": {
+    "resonance-audio": "^1.0.0"
+  }
+}
