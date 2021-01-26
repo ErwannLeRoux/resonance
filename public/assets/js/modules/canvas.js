@@ -1,7 +1,13 @@
 export class Canvas {
 
-    constructor(canvas, elements) {
+    constructor(canvas, elements, resonanceController) {
         this.elements = elements
+        this.resonanceController = resonanceController
+        this.elements.forEach((el) => {
+            let icon = new Image(50, 50);
+            icon.src = `assets/images/${el.icon}`;
+            el.icon = icon
+        })
         this.canvas   = canvas
         this.context = canvas.getContext('2d');
         this.lastMoveEventTime = 0;
@@ -20,12 +26,19 @@ export class Canvas {
     }
 
     initListeners() {
+        window.addEventListener('resize', (event) => {
+            this.resize();
+            this.draw();
+        }, false);
+
+        this.canvas.addEventListener('touchstart', (event) => {
+            this.cursorDownFunc(event);
+        });
+
         this.canvas.addEventListener('mousedown', (event) => {
             this.cursorDownFunc(event)
         });
-        this.canvas.addEventListener('touchmove', (event) => {
-            this.cursorDownFunc(event);
-        }, true);
+
         this.canvas.addEventListener('touchmove', (event) => {
             let currentEventTime = Date.now();
             if (currentEventTime - this.lastMoveEventTime > this.minimumThreshold) {
@@ -35,7 +48,8 @@ export class Canvas {
                 }
             }
         }, true);
-        this.canvas.addEventListener('mousemove', function(event) {
+
+        this.canvas.addEventListener('mousemove', (event) => {
             let currentEventTime = Date.now();
             if (currentEventTime - this.lastMoveEventTime > this.minimumThreshold) {
                 this.lastMoveEventTime = currentEventTime;
@@ -50,6 +64,7 @@ export class Canvas {
             this.cursorUpFunc()
         });
 
+        this.resonanceController.updateSources(this.elements)
         this.resize()
         this.draw()
     }
@@ -63,15 +78,21 @@ export class Canvas {
         this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
         for (let i = 0; i < this.elements.length; i++) {
-            let icon = new Image(50, 50);
-            icon.src = 'assets/images/head.png';
-            if (icon !== undefined) {
+            if (this.elements[i].icon !== undefined) {
                 let radiusInPixels = this.elements[i].radius * this.canvas.width;
                 let x = this.elements[i].x * this.canvas.width - radiusInPixels;
                 let y = this.elements[i].y * this.canvas.height - radiusInPixels;
                 this.context.globalAlpha = this.elements[i].alpha;
-                this.context.drawImage(
-                    icon, x, y, radiusInPixels * 2, radiusInPixels * 2);
+
+                this.elements[i].icon.onload = () => {
+                    this.context.drawImage(
+                        this.elements[i].icon, x, y, radiusInPixels * 2, radiusInPixels * 2);
+                }
+
+                if(this.elements[i].icon.complete) {
+                    this.context.drawImage(
+                        this.elements[i].icon, x, y, radiusInPixels * 2, radiusInPixels * 2);
+                }
             }
         }
     }
@@ -104,9 +125,9 @@ export class Canvas {
         if (this.selected.index > -1) {
             this.elements[this.selected.index].x = Math.max(0, Math.min(1,
                 (cursorPosition.x + this.selected.xOffset) / this.canvas.width));
-            this.elements[this._selected.index].y = Math.max(0, Math.min(1,
+            this.elements[this.selected.index].y = Math.max(0, Math.min(1,
                 (cursorPosition.y + this.selected.yOffset) / this.canvas.height));
-            this.invokeCallback();
+            this.resonanceController.updateSources(this.elements)
         }
         this.draw();
     }
@@ -162,10 +183,12 @@ export class Canvas {
                 }
             }
         }
+
         return {
             index: minIndex,
             xOffset: minXOffset,
             yOffset: minYOffset,
         };
     }
+
 }
