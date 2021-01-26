@@ -1,3 +1,45 @@
+body{
+    background-color: white;
+}
+
+main{
+    width: 80%;
+    margin: auto;
+}
+
 #scene-canvas {
+    background-color: white;
     border: 1px solid black;
+}
+
+#scene-container {
+    text-align: center;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+}
+
+#sounds-container {
+    background-color: #227A5E;
+    border-radius: .25rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    text-align: center;
+}
+
+.sound-item{
+    color: white;
+    border-bottom: solid 1px white;
+    padding: 0.5em;
+}
+
+.sound-item:hover{
+    cursor: pointer;
+    color: black;
+    background-color: #73C7AC;
+}
+#upload-container{
+    margin-top: 0.5rem;
+}
+
+.hidden{
+    display: none;
 }
