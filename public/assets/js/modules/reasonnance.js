@@ -1,28 +1,33 @@
 export class ResonanceController {
 
     constructor(elements) {
-        this.audioReady = false
-        this.audioElements = []
-        this.soundSources = []
-        this.audioContext = new AudioContext();
-        this.resonanceAudioScene = new ResonanceAudio(this.audioContext);
+        this.audioReady          = false
+        this.audioElements       = []
+        this.soundSources        = []
+        this.audioContext        = new AudioContext();
+        this.resonanceAudioScene = new ResonanceAudio(this.audioContext)
+        this.roomDimensions      = { width: 10, height: 10, depth: 3.4 }
+
         this.resonanceAudioScene.output.connect(this.audioContext.destination)
-        this.roomDimensions = { width: 10, height: 10, depth: 3.4 };
 
         elements?.forEach(element => {
             if(element.type == 'emitter') {
-                let audioElement = document.createElement('audio');
-                audioElement.src = `resources/audio/${element.path}`;
+                let audioElement         = document.createElement('audio');
+
+                audioElement.src         = `resources/audio/${element.path}`;
                 audioElement.crossOrigin = 'anonymous';
+                audioElement.loop        = true;
+
                 audioElement.load();
-                audioElement.loop = true;
 
                 let audioElementSource = this.audioContext.createMediaElementSource(audioElement);
-                let source = this.resonanceAudioScene.createSource();
-                audioElement.volume = 1
+                let source             = this.resonanceAudioScene.createSource();
+                audioElement.volume    = 1
+
                 audioElementSource.connect(source.input);
 
-                source.setPosition(this.roomDimensions.width * element.x, this.roomDimensions.height * element.y, 0);
+                source.setPosition(this.roomDimensions.width * element.x, this.roomDimensions.height * element.y,
+                    0);
                 this.audioElements.push(audioElement)
                 this.soundSources.push(source)
             }
@@ -49,8 +54,6 @@ export class ResonanceController {
             }
         }
     }
-
-
 
     playAll() {
         this.audioElements?.forEach(element => {

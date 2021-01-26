@@ -1,23 +1,24 @@
 export class Canvas {
 
     constructor(canvas, elements, resonanceController) {
-        this.elements = elements
         this.resonanceController = resonanceController
-        this.elements.forEach((el) => {
-            let icon = new Image(50, 50);
-            icon.src = `assets/images/${el.icon}`;
-            el.icon = icon
-        })
-        this.canvas   = canvas
-        this.context = canvas.getContext('2d');
-        this.lastMoveEventTime = 0;
-        this.minimumThreshold = 16;
-        this.selected = {
+        this.elements            = elements
+        this.canvas              = canvas
+        this.context             = canvas.getContext('2d')
+        this.lastMoveEventTime   = 0
+        this.minimumThreshold    = 16
+        this.selected            = {
             index: -1,
             xOffset: 0,
             yOffset: 0
         }
 
+        /* init icons */
+        this.elements.forEach((el) => {
+            let icon = new Image(50, 50);
+            icon.src = `assets/images/${el.icon}`;
+            el.icon  = icon
+        })
         this.initListeners()
     }
 
@@ -73,7 +74,7 @@ export class Canvas {
         this.context.globalAlpha = 1;
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.context.lineWidth = 5;
+        this.context.lineWidth   = 5;
         this.context.strokeStyle = '#bbb';
         this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -98,25 +99,25 @@ export class Canvas {
     }
 
     resize() {
-        let canvasWidth = this.canvas.parentNode.clientWidth;
+        let canvasWidth   = this.canvas.parentNode.clientWidth;
         let maxCanvasSize = 480;
         if (canvasWidth > maxCanvasSize) {
             canvasWidth = maxCanvasSize;
         }
-        this.canvas.width = canvasWidth;
+        this.canvas.width  = canvasWidth;
         this.canvas.height = canvasWidth;
     }
 
     cursorDownFunc(event) {
         this.cursorDown    = true
         let cursorPosition = this.getCursorPosition(event)
-        this.selected = this.getNearestElement(cursorPosition);
+        this.selected      = this.getNearestElement(cursorPosition);
         this.cursorUpdateFunc(cursorPosition);
 
     }
 
     cursorUpFunc(event) {
-        this.cursorDown = false;
+        this.cursorDown     = false;
         this.selected.index = -1;
         document.body.style = '';
     }
@@ -134,7 +135,8 @@ export class Canvas {
 
     cursorMoveFunc(event) {
         let cursorPosition = this.getCursorPosition(event);
-        let selection = this.getNearestElement(cursorPosition);
+        let selection      = this.getNearestElement(cursorPosition);
+
         if (this.cursorDown == true) {
             this.cursorUpdateFunc(cursorPosition);
         }
@@ -177,9 +179,9 @@ export class Canvas {
                 if (distance < minDistance &&
                     distance < 2 * this.elements[i].radius * this.canvas.width) {
                     minDistance = distance;
-                    minIndex = i;
-                    minXOffset = dx;
-                    minYOffset = dy;
+                    minIndex    = i;
+                    minXOffset  = dx;
+                    minYOffset  = dy;
                 }
             }
         }

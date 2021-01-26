@@ -13,19 +13,23 @@ document.addEventListener("DOMContentLoaded", function() {
       {x: 0.75, y: 0.5, path: "emmanuel/accepterLesCoockies.wav",radius: 0.04, alpha: 0.75, clickable: true, type: "emitter",
           icon : "emitters/emitter2.svg"},
   ]
+
   let ctx                   = canvas.getContext('2d')
   let canvasController      = null
-  let resonanceController = null
+  let resonanceController   = null
+
+
+  // UPLOAD
+  let uploadController = document.querySelector("#upload-controller")
+  let sounds           = document.querySelector("#sounds-upload")
+  let form             = document.querySelector("#form-upload")
 
   playButton.addEventListener('click', function(e) {
-      /* Chrome doesn't allow audio context creation until user action */
-      if(!resonanceController) resonanceController =  new ResonanceController(elements)
-      if(!canvasController) canvasController = new Canvas(canvas, elements, resonanceController)
-      resonanceController.playAll()
+    /* Chrome doesn't allow audio context creation until user action */
+    if(!resonanceController) resonanceController =  new ResonanceController(elements)
+    if(!canvasController) canvasController = new Canvas(canvas, elements, resonanceController)
+    resonanceController.playAll()
   })
-
-  // UPLOAD 
-  let uploadController = document.querySelector("#upload-controller")
   uploadController.addEventListener("click", (e) =>{
     e.preventDefault()
     let uploadForm = document.querySelector("#upload-form")
@@ -34,12 +38,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }else{
       uploadForm.classList.add("hidden")
     }
-    
+
 
   })
-
-  let sounds = document.querySelector("#sounds-upload")
-  let form = document.querySelector("#form-upload")
   form.addEventListener("submit", (e) => {
     e.preventDefault()
     let soundfiles = sounds.files
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let formData = new FormData()
     Array.from(soundfiles).forEach(soundfile => {
       formData.append('sounds', soundfile)
-    }) 
+    })
 
     formData.append('sounds', soundfiles)
     let xhr = new XMLHttpRequest()
@@ -60,15 +61,15 @@ document.addEventListener("DOMContentLoaded", function() {
     xhr.open('POST', '/upload');
     xhr.send(formData);
   })
-
 });
 
 function actualiseSoundsList(sounds){
   let soundBag = document.querySelector("#sounds-container")
   sounds.forEach((sound) => {
-    let element = document.createElement('div')
-    element.classList.add('sound-item')
+    let element     = document.createElement('div')
     let elementText = document.createTextNode(sound.name)
+
+    element.classList.add('sound-item')
     element.appendChild(elementText)
     soundBag.appendChild(element)
   })
