@@ -7,18 +7,7 @@ export class ResonanceController {
         this.audioContext = new AudioContext();
         this.resonanceAudioScene = new ResonanceAudio(this.audioContext);
         this.resonanceAudioScene.output.connect(this.audioContext.destination)
-        this.roomDimensions = { width: 3.1, height: 2.5, depth: 3.4 };
-        this.roomMaterials = {
-          // Room wall materials
-          left: 'brick-bare',
-          right: 'curtain-heavy',
-          front: 'marble',
-          back: 'glass-thin',
-          // Room floor
-          down: 'grass',
-          // Room ceiling
-          up: 'transparent',
-        };
+        this.roomDimensions = { width: 10, height: 10, depth: 3.4 };
 
         elements?.forEach(element => {
             if(element.type == 'emitter') {
@@ -30,6 +19,7 @@ export class ResonanceController {
 
                 let audioElementSource = this.audioContext.createMediaElementSource(audioElement);
                 let source = this.resonanceAudioScene.createSource();
+                audioElement.volume = 1
                 audioElementSource.connect(source.input);
 
                 source.setPosition(this.roomDimensions.width * element.x, this.roomDimensions.height * element.y, 0);
@@ -45,6 +35,9 @@ export class ResonanceController {
             return
         }
 
+        /* get listener element */
+        let listenerElement = elements.find(el => el.type == 'listener')
+
         for (let i = 0; i < elements.length; i++) {
             let x = (elements[i].x - 0.5) * this.roomDimensions.width / 2;
             let y = 0;
@@ -57,10 +50,11 @@ export class ResonanceController {
         }
     }
 
+
+
     playAll() {
         this.audioElements?.forEach(element => {
             element.play()
         })
     }
-
 }
