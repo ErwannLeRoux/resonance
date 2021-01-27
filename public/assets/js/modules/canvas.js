@@ -24,6 +24,24 @@ export class Canvas {
 
     addElement(element) {
         this.elements.push(element)
+        let icon = new Image(50, 50);
+        icon.src = `assets/images/${element.icon}`;
+        element.icon  = icon
+
+        this.resonanceController.addAudioElement(this.elements, element)
+        this.resize()
+        this.draw()
+    }
+
+    removeElement(element) {
+        const index = this.elements.indexOf(element);
+        if (index > -1) {
+            this.elements.splice(index, 1);
+        }
+        this.resonanceController.removeAudioElement(element)
+
+        this.resize()
+        this.draw()
     }
 
     initListeners() {

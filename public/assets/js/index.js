@@ -5,24 +5,46 @@ document.addEventListener("DOMContentLoaded", function() {
   let canvas                = document.querySelector("#scene-canvas")
   let playButton            = document.querySelector("#play-btn")
   let elements              = [
-
-      {x: 0.5, y: 0.5, path: "emmanuel/accepterLesCookies.wav",radius: 0.04, alpha: 0.75, clickable: true, type: "listener",
-          icon: "listener.svg"},
-      {x: 0.25, y: 0.5, path: "emmanuel/accessibilite.wav",radius: 0.04, alpha: 0.75, clickable: true, type: "emitter",
-          icon : "emitters/emitter1.svg"},
-      {x: 0.75, y: 0.5, path: "emmanuel/accepterLesCoockies.wav",radius: 0.04, alpha: 0.75, clickable: true, type: "emitter",
-          icon : "emitters/emitter2.svg"},
+      {x: 0.5, y: 0.5, path: "",radius: 0.04, alpha: 0.75, clickable: true, type: "listener",
+          icon: "listener.svg"}
   ]
 
   let ctx                   = canvas.getContext('2d')
   let canvasController      = null
   let resonanceController   = null
 
-
   // UPLOAD
+  let soundTable       = document.querySelector(".sound-table")
   let uploadController = document.querySelector("#upload-controller")
   let sounds           = document.querySelector("#sounds-upload")
-  let form             = document.querySelector("#form-upload")
+  let form             = document.querySelector("#upload-form")
+  let soundsItem       = document.querySelectorAll(".sound-item")
+  let selectedElement  = null
+
+  canvas.addEventListener('drop', (e) => {
+    e.preventDefault()
+
+    const rect = canvas.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / canvas.width
+    const y = (e.clientY - rect.top) / canvas.height
+
+    /* Generating new element then add it to the audio scene */
+    let el = { x: x, y: y, radius: 0.04, alpha: 0.75, playing: true, clickable: true, type: "emitter",
+      icon: `emitters/emitter${elements.length}.svg`, path: selectedElement}
+
+    canvasController.addElement(el)
+    addSoundDOM(el, soundTable, canvasController, resonanceController)
+  })
+
+  soundsItem.forEach((item) => {
+    item.addEventListener('dragstart', (e) => {
+      selectedElement = item.id
+    })
+
+    canvas.addEventListener('dragover', (e) => {
+      e.preventDefault()
+    })
+  })
 
   playButton.addEventListener('click', function(e) {
     /* Chrome doesn't allow audio context creation until user action */
@@ -74,3 +96,40 @@ function actualiseSoundsList(sounds){
     soundBag.appendChild(element)
   })
 }
+
+function addSoundDOM(element, table, canvasController, resonanceController) {
+  let tr       = document.createElement('tr')
+  let tdTitle  = document.createElement('td')
+  let tdStatus = document.createElement('td')
+  let tdDelete = document.createElement('td')
+  let button   = document.createElement('button')
+  let deleteIc = document.createElement('img')
+
+  deleteIc.addEventListener('click', (e) => {
+    canvasController.removeElement(element)
+    tr.remove()
+  })
+
+  button.addEventListener('click', (e) => {
+    resonanceController.swapPlayingStatus(element)
+    if(button.textContent == 'Pause') {
+      button.textContent = 'Play'
+    } else {
+      button.textContent = 'Pause'
+    }
+  })
+
+  deleteIc.src = 'assets/images/cancel.png'
+  tdDelete.append(deleteIc)
+
+  button.textContent = 'Pause'
+  button.attributes.type = 'button'
+
+  tdTitle.append(element.path)
+  tdStatus.append(button)
+
+  let arr  = [tdTitle, tdStatus, tdDelete]
+  tr.append(...arr)
+  table.querySelector('tbody').appendChild(tr)
+}
+
