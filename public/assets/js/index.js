@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let canvasController      = null
   let resonanceController   = null
 
-  // UPLOAD
   let soundTable       = document.querySelector(".sound-table")
   let uploadController = document.querySelector("#upload-controller")
   let sounds           = document.querySelector("#sounds-upload")
@@ -52,20 +51,45 @@ document.addEventListener("DOMContentLoaded", function() {
     if(!canvasController) canvasController = new Canvas(canvas, elements, resonanceController)
     resonanceController.playAll()
   })
-  uploadController.addEventListener("click", (e) =>{
+
+
+  /* Upload */
+  let uploadCollapse         = document.querySelector("#upload-controller")
+  let uploadForm             = document.querySelector("#upload-form")
+  let uploadInput            = document.querySelector("#sounds-upload__input")
+  let uploadButton           = document.querySelector("#sounds-upload__button")
+  let uploadLabel            = document.querySelector("#sounds-upload__label")
+  let uploadInputContainer   = document.querySelector("#sounds-input__container")
+  let defaultLabelText       = "Aucun fichier sélectionné"
+  
+  uploadLabel.textContent = defaultLabelText;
+  uploadLabel.title = defaultLabelText;
+
+  uploadButton.addEventListener('click', (e) => {
+    uploadInput.click();
+  })
+
+  uploadInput.addEventListener('change', (e) => {
+    let fileNameList = Array.from(uploadInput.files).map((file) => {
+      return file.name
+    })
+
+    uploadLabel.textContent = fileNameList.join(', ') || defaultLabelText;
+    uploadLabel.title = label.textContent;
+  })
+
+  uploadCollapse.addEventListener("click", (e) =>{
     e.preventDefault()
-    let uploadForm = document.querySelector("#upload-form")
     if(uploadForm.classList.contains("hidden")){
       uploadForm.classList.remove("hidden")
     }else{
       uploadForm.classList.add("hidden")
     }
-
-
   })
-  form.addEventListener("submit", (e) => {
+
+  uploadForm.addEventListener("submit", (e) => {
     e.preventDefault()
-    let soundfiles = sounds.files
+    let soundfiles = uploadInput.files
 
     let formData = new FormData()
     Array.from(soundfiles).forEach(soundfile => {
@@ -86,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function actualiseSoundsList(sounds){
-  let soundBag = document.querySelector("#sounds-container")
+  let soundBag = document.querySelector("#sounds-bag")
   sounds.forEach((sound) => {
     let element     = document.createElement('div')
     let elementText = document.createTextNode(sound.name)
