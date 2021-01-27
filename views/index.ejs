@@ -13,19 +13,27 @@
                     <button id="play-btn" type="button" name="button">Jouer le son</button>
                 </div>
                 <aside id="sounds-container">
-                    <% sounds.forEach(sound => { %>
-                        <div class="sound-item">
-                            <%= sound %>
-                        </div>
-                    <% }); %>
-                    
-                    <div id="upload-container">
-                        <div>
-                            <a id="upload-controller" href="">ajouter une source audio</a>
-                        </div>
+                    <h1>
+                        Listes des sons :
+                    </h1>
+                    <div id="sounds-bag">
+                        <% sounds.forEach(sound => { %>
+                            <div class="sound-item">
+                                <%= sound %>
+                            </div>
+                        <% }); %>
+                    </div>
+                    <div >
+                        <a id="upload-controller" href="">ajouter une source audio</a>
+                    </div>
+                    <div id="upload-container">  
                         <form class="hidden" id="upload-form" method="POST" enctype="multipart/form-data">
-                            <input id="sounds-upload" name="sounds" type="file" multiple />
-                            <button id="sounds-upload-btn" type="submit">upload</button>
+                            <div id="sounds-input__container">
+                                <input id="sounds-upload__input" name="sounds" type="file"  accept="audio/*" multiple />
+                                <button id="sounds-upload__button" type="button">Parcourir</button>
+                                <span id="sounds-upload__label"></span>
+                            </div>
+                            <button id="sounds-upload__submit" type="submit">Enregistrer</button>
                         </form>
                     </div>
                 </aside>

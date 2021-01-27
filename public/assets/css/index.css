@@ -1,5 +1,5 @@
 body{
-    background-color: white;
+    background-color: #F2F2F2;
 }
 
 main{
@@ -9,37 +9,98 @@ main{
 
 #scene-canvas {
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid #333;
 }
 
 #scene-container {
+    color: #333;
     text-align: center;
     display: grid;
     grid-template-columns: 5fr 1fr;
 }
 
+#sounds-bag{
+    margin-bottom: 0.5rem;
+    overflow-y: auto;
+    max-height: 650px;
+}
+
 #sounds-container {
-    background-color: #227A5E;
-    border-radius: .25rem;
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    padding: 0.5rem 1rem; 
+    border-top: solid 5px #f50;
+    background-color: white;
+    border-radius: 0rem 0rem 0.25rem .25rem;
+    box-shadow: 0 0.8rem 1rem rgba(17, 17, 17, 0.15);
     text-align: center;
+    font-family: sans-serif;
 }
 
 .sound-item{
     color: white;
-    border-bottom: solid 1px white;
-    padding: 0.5em;
+    background-color: rgba(17, 17, 17,0.8);
+    border-radius: 1px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+.sound-item:last-of-type{
+    margin-bottom: 0rem;
 }
 
 .sound-item:hover{
     cursor: pointer;
-    color: black;
-    background-color: #73C7AC;
-}
-#upload-container{
-    margin-top: 0.5rem;
 }
 
-.hidden{
+#upload-container{
+    margin: 1rem;
+}
+
+#sounds-input__container{
+    display: inline-flex;
+    align-items: center;
+    font-size: 12pt;
+}
+
+#sounds-upload__input{
+    display: none;
+}
+
+#sounds-upload__button{
+    margin-right: 15px;
+}
+
+#sounds-upload__submit{
+    margin-top: 1em;
+}
+
+#sounds-upload__button, #sounds-upload__submit{
+    -webkit-appearance: none;
+    background:  #f50;
+    border:none;
+    border-radius: 4px;
+    outline: none;
+    padding: 0.5rem 0.8rem;
+    color: white;
+    font-size: 12pt;
+    font-family: sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#sounds-upload__button:active {
+    background-color: #00745D;
+}
+
+#sounds-upload__label {
+    color: #333;
+    font-family: sans-serif;
+    max-width: 250px;
+    font-size: 12pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#upload-container .hidden{
     display: none;
 }

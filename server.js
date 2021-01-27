@@ -22,6 +22,7 @@ async function main() {
 
     router.get('/', (request, response) => {
         let directoryPath = path.join(__dirname, '\\resources\\audio')
+        
         readDirectory(directoryPath).then((soundsList) => {
             response.render("index", {"sounds": soundsList})
         }).catch((err)=> {
