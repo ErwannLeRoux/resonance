@@ -14,11 +14,13 @@ document.addEventListener("DOMContentLoaded", function() {
   let resonanceController   = null
 
   let soundTable       = document.querySelector(".sound-table")
-  let uploadController = document.querySelector("#upload-controller")
-  let sounds           = document.querySelector("#sounds-upload")
-  let form             = document.querySelector("#upload-form")
   let soundsItem       = document.querySelectorAll(".sound-item")
+  let canvasContainer  = document.querySelector("#scene-canvas-container")
+
   let selectedElement  = null
+
+  canvas.width  = canvasContainer.clientWidth
+  canvas.height = canvasContainer.clientHeight
 
   canvas.addEventListener('drop', (e) => {
     e.preventDefault()
@@ -29,19 +31,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* Generating new element then add it to the audio scene */
     let el = { x: x, y: y, radius: 0.04, alpha: 0.75, playing: true, clickable: true, type: "emitter",
-      icon: `emitters/emitter${elements.length}.svg`, path: selectedElement}
+      icon: `emitters/emitter${elements.length}.svg`, path: selectedElement.path, ext: selectedElement.ext}
+
+    /* remove element from the list */
+    let droppedElement = document.querySelector(`.sound-item[data-path='${selectedElement.path}']`)
+    droppedElement.remove()
 
     canvasController.addElement(el)
+
     addSoundDOM(el, soundTable, canvasController, resonanceController)
+  })
+
+  canvas.addEventListener('dragover', (e) => {
+    e.preventDefault()
   })
 
   soundsItem.forEach((item) => {
     item.addEventListener('dragstart', (e) => {
-      selectedElement = item.id
-    })
-
-    canvas.addEventListener('dragover', (e) => {
-      e.preventDefault()
+      selectedElement = {
+        path: item.dataset.path,
+        ext: item.dataset.ext
+      }
     })
   })
 
@@ -52,18 +62,28 @@ document.addEventListener("DOMContentLoaded", function() {
     resonanceController.playAll()
   })
 
-
   /* Upload */
   let uploadCollapse         = document.querySelector("#upload-controller")
   let uploadForm             = document.querySelector("#upload-form")
   let uploadInput            = document.querySelector("#sounds-upload__input")
   let uploadButton           = document.querySelector("#sounds-upload__button")
   let uploadLabel            = document.querySelector("#sounds-upload__label")
-  let uploadInputContainer   = document.querySelector("#sounds-input__container")
+  let playAllButton          = document.querySelector(".play-all")
   let defaultLabelText       = "Aucun fichier sélectionné"
-  
+
   uploadLabel.textContent = defaultLabelText;
-  uploadLabel.title = defaultLabelText;
+  uploadLabel.title       = defaultLabelText;
+
+  playAllButton.addEventListener('click', (e) => {
+    /* retrieve all buttons and pass it to the functions */
+    let allButtons = soundTable.querySelectorAll('.single-control-button')
+
+    if(playAllButton.textContent == 'Stop All') {
+      stopAll(resonanceController, playAllButton, allButtons)
+    } else {
+      playAll(resonanceController, playAllButton, allButtons)
+    }
+  })
 
   uploadButton.addEventListener('click', (e) => {
     uploadInput.click();
@@ -75,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 
     uploadLabel.textContent = fileNameList.join(', ') || defaultLabelText;
-    uploadLabel.title = label.textContent;
+    uploadLabel.title = uploadLabel.textContent;
   })
 
   uploadCollapse.addEventListener("click", (e) =>{
@@ -101,59 +121,109 @@ document.addEventListener("DOMContentLoaded", function() {
     xhr.responseType = 'json'
     xhr.onload = () => {
       if(xhr.response.status == "success"){
-        actualiseSoundsList(xhr.response.data)
+        updateSoundsList(xhr.response.data)
       }
     }
     xhr.open('POST', '/upload');
     xhr.send(formData);
   })
+
+  function updateSoundsList(sounds){
+    let soundBag = document.querySelector("#sounds-bag")
+
+    sounds.forEach((sound) => {
+      let element     = document.createElement('div')
+      let elementText = document.createTextNode(sound.name)
+
+      element.classList.add('sound-item')
+
+
+      element.dataset.path = sound.name
+
+      element.addEventListener('dragstart', (e) => {
+        selectedElement.path = element.dataset.path
+        selectedElement.ext  = element.dataset.ext
+      })
+
+      element.draggable = true
+      element.appendChild(elementText)
+      soundBag.appendChild(element)
+    })
+  }
+
+  function addSoundDOM(element, table, canvasController, resonanceController) {
+    let tr         = document.createElement('tr')
+    let tdTitle    = document.createElement('td')
+    let tdStatus   = document.createElement('td')
+    let tdDelete   = document.createElement('td')
+    let button     = document.createElement('button')
+    let deleteIc   = document.createElement('img')
+    let tbody      = table.querySelector('tbody')
+    let noDataRow  = tbody.querySelector('.no-data')
+    let playAllRow = tbody.querySelector('.play-all-row')
+
+    deleteIc.addEventListener('click', (e) => {
+      canvasController.removeElement(element)
+      tr.remove()
+      /* display empty message if no more data */
+      if(tbody.querySelectorAll('tr').length == 2) {
+        noDataRow.style.display  = 'revert'
+        playAllRow.style.display = 'none'
+      }
+    })
+
+    button.addEventListener('click', (e) => {
+      resonanceController.swapPlayingStatus(element)
+      if(button.textContent == 'Pause') {
+        button.textContent = 'Playing'
+        button.classList.remove("single-pause-button")
+      } else {
+        button.textContent = 'Pause'
+        button.classList.add("single-pause-button")
+      }
+    })
+
+    deleteIc.src = 'assets/images/cancel.png'
+    tdDelete.append(deleteIc)
+
+    button.textContent     = 'Playing'
+    button.attributes.type = 'button'
+    button.classList.add('single-control-button')
+    button.classList.add('single-button')
+
+    tdTitle.append(element.path)
+    tdTitle.classList.add('sound-path-cell')
+    tdStatus.append(button)
+
+    let arr  = [tdTitle, tdStatus, tdDelete]
+    tr.append(...arr)
+
+    noDataRow.style.display  = 'none'
+    playAllRow.style.display = 'revert'
+
+    tbody.appendChild(tr)
+  }
+
+  function playAll(resonanceController, playAllButton, allButtons) {
+    resonanceController.playAll()
+    playAllButton.textContent = 'Stop All'
+    playAllButton.classList.add('single-pause-button')
+    allButtons.forEach((btn) => {
+      btn.classList.remove('single-pause-button')
+      btn.textContent = 'Playing'
+    })
+  }
+
+  function stopAll(resonanceController, playAllButton, allButtons) {
+    resonanceController.stopAll()
+    playAllButton.textContent = 'Play All'
+    playAllButton.classList.remove('single-pause-button')
+    allButtons.forEach((btn) => {
+      btn.classList.add('single-pause-button')
+      btn.textContent = 'Stop'
+    })
+  }
 });
 
-function actualiseSoundsList(sounds){
-  let soundBag = document.querySelector("#sounds-bag")
-  sounds.forEach((sound) => {
-    let element     = document.createElement('div')
-    let elementText = document.createTextNode(sound.name)
 
-    element.classList.add('sound-item')
-    element.appendChild(elementText)
-    soundBag.appendChild(element)
-  })
-}
-
-function addSoundDOM(element, table, canvasController, resonanceController) {
-  let tr       = document.createElement('tr')
-  let tdTitle  = document.createElement('td')
-  let tdStatus = document.createElement('td')
-  let tdDelete = document.createElement('td')
-  let button   = document.createElement('button')
-  let deleteIc = document.createElement('img')
-
-  deleteIc.addEventListener('click', (e) => {
-    canvasController.removeElement(element)
-    tr.remove()
-  })
-
-  button.addEventListener('click', (e) => {
-    resonanceController.swapPlayingStatus(element)
-    if(button.textContent == 'Pause') {
-      button.textContent = 'Play'
-    } else {
-      button.textContent = 'Pause'
-    }
-  })
-
-  deleteIc.src = 'assets/images/cancel.png'
-  tdDelete.append(deleteIc)
-
-  button.textContent = 'Pause'
-  button.attributes.type = 'button'
-
-  tdTitle.append(element.path)
-  tdStatus.append(button)
-
-  let arr  = [tdTitle, tdStatus, tdDelete]
-  tr.append(...arr)
-  table.querySelector('tbody').appendChild(tr)
-}
 

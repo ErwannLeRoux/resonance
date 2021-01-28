@@ -38,18 +38,18 @@ export class ResonanceController {
     }
 
     addAudioElement(elements, element) {
-        let audioElement         = document.createElement('audio');
+        let audioElement          = document.createElement('audio');
 
-        audioElement.src         = `resources/audio/${element.path}`;
-        audioElement.crossOrigin = 'anonymous';
-        audioElement.loop        = true;
-        audioElement.id          = element.path
+        audioElement.src          = `resources/audio/${element.path}.${element.ext}`;
+        audioElement.crossOrigin  = 'anonymous';
+        audioElement.loop         = true;
+        audioElement.id = element.path
 
         audioElement.load();
 
         let audioElementSource = this.audioContext.createMediaElementSource(audioElement);
         let source             = this.resonanceAudioScene.createSource();
-        source.id              = element.path
+        source.id   = element.path
 
         audioElementSource.connect(source.input);
 
@@ -93,7 +93,8 @@ export class ResonanceController {
 
     stopAll() {
         this.audioElements?.forEach(element => {
-            element.stop()
+            element.pause()
+            element.currentTime = 0
         })
     }
 

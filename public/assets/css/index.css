@@ -7,9 +7,61 @@ main{
     margin: auto;
 }
 
+.play-all-row {
+    display: none;
+}
+
+.sound-path-cell {
+    font-weight: bold;
+}
+
+.single-button {
+    background-color: #FF5500;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.single-pause-button {
+    background-color: lightgrey;
+    color: black;
+}
+
+#play-btn {
+    background-color: #FF5500;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.sounds-table-container {
+    width: 100%;
+}
+
 #scene-canvas {
     background-color: white;
     border: 1px solid #333;
+    display: block;
+}
+
+#scene-canvas-container {
+    max-height: 80vh;
 }
 
 #scene-container {
@@ -17,16 +69,18 @@ main{
     text-align: center;
     display: grid;
     grid-template-columns: 5fr 1fr;
+    grid-gap: 2rem;
 }
 
 #sounds-bag{
     margin-bottom: 0.5rem;
-    overflow-y: auto;
-    max-height: 650px;
 }
 
 #sounds-container {
-    padding: 0.5rem 1rem; 
+    width: 400px;
+    overflow-y: scroll;
+    height: 80vh;
+    padding: 0.5rem 1rem;
     border-top: solid 5px #f50;
     background-color: white;
     border-radius: 0rem 0rem 0.25rem .25rem;
@@ -113,10 +167,11 @@ main{
     font-family: sans-serif;
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    width: 100%;
 }
 
 .sound-table thead tr {
-    background-color: #009879;
+    background-color: #FF5500;
     color: #ffffff;
 }
 
@@ -134,7 +189,7 @@ main{
 }
 
 .sound-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+    border-bottom: 2px solid #FF5500;
 }
 
 .sound-table tbody tr.active-row {

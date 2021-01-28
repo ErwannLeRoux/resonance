@@ -99,18 +99,18 @@ export class Canvas {
         for (let i = 0; i < this.elements.length; i++) {
             if (this.elements[i].icon !== undefined) {
                 let radiusInPixels = this.elements[i].radius * this.canvas.width;
-                let x = this.elements[i].x * this.canvas.width - radiusInPixels;
-                let y = this.elements[i].y * this.canvas.height - radiusInPixels;
+                let x = this.elements[i].x * this.canvas.width - radiusInPixels/2;
+                let y = this.elements[i].y * this.canvas.height - radiusInPixels/2;
                 this.context.globalAlpha = this.elements[i].alpha;
 
                 this.elements[i].icon.onload = () => {
                     this.context.drawImage(
-                        this.elements[i].icon, x, y, radiusInPixels * 2, radiusInPixels * 2);
+                        this.elements[i].icon, x, y, radiusInPixels, radiusInPixels);
                 }
 
                 if(this.elements[i].icon.complete) {
                     this.context.drawImage(
-                        this.elements[i].icon, x, y, radiusInPixels * 2, radiusInPixels * 2);
+                        this.elements[i].icon, x, y, radiusInPixels, radiusInPixels);
                 }
             }
         }
@@ -118,12 +118,10 @@ export class Canvas {
 
     resize() {
         let canvasWidth   = this.canvas.parentNode.clientWidth;
-        let maxCanvasSize = 480;
-        if (canvasWidth > maxCanvasSize) {
-            canvasWidth = maxCanvasSize;
-        }
+        let canvasHeight  = this.canvas.parentNode.clientHeight;
+
         this.canvas.width  = canvasWidth;
-        this.canvas.height = canvasWidth;
+        this.canvas.height = canvasHeight;
     }
 
     cursorDownFunc(event) {

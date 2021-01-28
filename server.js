@@ -9,7 +9,7 @@ const fileUpload = require('express-fileupload');
 async function main() {
     let router = express.Router();
     let app = express()
-    
+
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
     app.use(cors())
@@ -22,9 +22,16 @@ async function main() {
 
     router.get('/', (request, response) => {
         let directoryPath = path.join(__dirname, '\\resources\\audio')
-        
+
         readDirectory(directoryPath).then((soundsList) => {
-            response.render("index", {"sounds": soundsList})
+            let renderedList = []
+            soundsList.forEach((sound) => {
+                let arr  = sound.split(".")
+                let obj  = { path: arr[0], ext: arr[1]}
+                renderedList.push(obj)
+            })
+
+            response.render("index", {"sounds": renderedList})
         }).catch((err)=> {
             response.status(500).json({
                 error: err
@@ -44,7 +51,7 @@ async function main() {
                 if(!(uploadedSounds instanceof Array)){
                     uploadedSounds = [req.files.sounds]
                 }
-                let uploadDirectoryPath = __dirname + '\\resources\\audio\\'   
+                let uploadDirectoryPath = __dirname + '\\resources\\audio\\'
                 readDirectory(uploadDirectoryPath).then((soundsList) => {
                     let promises = []
                     for(let i = 0; i<uploadedSounds.length; i++){
@@ -52,7 +59,7 @@ async function main() {
                         let extension = initialName.pop()
 
                         let id = 1
-                        
+
                         while(soundsList.includes(uploadedSounds[i].name)){
                             uploadedSounds[i].name = initialName +` - (${id}).` + extension
                             id = id + 1

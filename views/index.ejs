@@ -7,24 +7,10 @@
     </head>
     <body>
         <main>
+            <button id="play-btn" type="button" name="button">Démarrer l'expérience !</button>
             <div id="scene-container">
                 <div id=scene-canvas-container>
-                    <canvas width="400" height="400" id="scene-canvas"></canvas>
-                    <button id="play-btn" type="button" name="button">Jouer le son</button>
-
-                    <table class="sound-table">
-                        <thead>
-                        <tr>
-                            <th>Son</th>
-                            <th>Status</th>
-                            <th>Supprimer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-
+                    <canvas id="scene-canvas"></canvas>
                 </div>
                 <aside id="sounds-container">
                     <h1>
@@ -32,13 +18,16 @@
                     </h1>
                     <div id="sounds-bag">
                         <% sounds.forEach(sound => { %>
-                            <div draggable="true" id=<%= sound %> class="sound-item">
-                                <%= sound %>
+                            <div draggable="true" data-ext="<%= sound.ext %>" data-path="<%= sound.path %>" class="sound-item">
+                                <%= sound.path %>.<%= sound.ext %>
                             </div>
                         <% }); %>
                     </div>
+                    <div >
+                        <a id="upload-controller" href="">ajouter une source audio</a>
+                    </div>
 
-                    <div id="upload-container">  
+                    <div id="upload-container">
                         <form class="hidden" id="upload-form" method="POST" enctype="multipart/form-data">
                             <div id="sounds-input__container">
                                 <input id="sounds-upload__input" name="sounds" type="file"  accept="audio/*" multiple />
@@ -50,6 +39,28 @@
                     </div>
                 </aside>
             </div>
+            <div class="sounds-table-container">
+                <table class="sound-table">
+                    <thead>
+                    <tr>
+                        <th>Son</th>
+                        <th>Status</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="no-data" colspan="3">Aucun son n'est actuellement dans la page</td>
+                        </tr>
+                        <tr>
+                            <td class="play-all-row" colspan="3">
+                                <button class="play-all single-button single-pause-button">Stop All</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </main>
 
         <script src="resonance/build/resonance-audio.min.js"></script>
