@@ -110,7 +110,6 @@ main{
 }
 
 #sounds-input__container{
-    display: inline-flex;
     align-items: center;
     font-size: 12pt;
 }
