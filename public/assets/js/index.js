@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let soundTable            = document.querySelector(".sound-table")
   let soundsItem            = document.querySelectorAll(".sound-item")
   let canvasContainer       = document.querySelector("#scene-canvas-container")
+  let soundsBag             = document.querySelector("#sounds-bag")
 
   /* Upload relative fields */
   let uploadCollapse         = document.querySelector("#upload-controller")
@@ -112,7 +113,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
   uploadForm.addEventListener("submit", (e) => {
     e.preventDefault()
-    let soundfiles = uploadInput.files
+    let soundfiles  = uploadInput.files
+    let progressBar = document.createElement('div')
+    progressBar.classList.add('sound-item-loader')
+    progressBar.textContent = 'Loading .'
+
+    let i = 0
+
+    setInterval(() => {
+      let str = ''
+      if(i == 3) i = 0
+      for(let j = 0; j <= i; j++) {
+        str += ' .'
+      }
+      i++
+      progressBar.textContent = `Loading ${str}`
+    }, 1000)
+
+    soundsBag.append(progressBar)
 
     let formData = new FormData()
     Array.from(soundfiles).forEach(soundfile => {
@@ -122,8 +140,10 @@ document.addEventListener("DOMContentLoaded", function() {
     formData.append('sounds', soundfiles)
     let xhr = new XMLHttpRequest()
     xhr.responseType = 'json'
+
     xhr.onload = () => {
       if(xhr.response.status == "success"){
+        progressBar.remove()
         updateSoundsList(xhr.response.data)
       }
     }

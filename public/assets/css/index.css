@@ -89,6 +89,14 @@ main{
     font-family: sans-serif;
 }
 
+.sound-item-loader {
+    color: white;
+    background-color: #ff5500;
+    border-radius: 1px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
 .sound-item{
     color: white;
     background-color: rgba(17, 17, 17,0.8);
