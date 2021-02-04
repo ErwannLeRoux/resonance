@@ -80,8 +80,8 @@ main{
     width: 400px;
     overflow-y: scroll;
     height: 80vh;
-    padding: 0.5rem 1rem;
-    border-top: solid 5px #f50;
+    border-top: solid 5px FF5500;
+    ;
     background-color: white;
     border-radius: 0rem 0rem 0.25rem .25rem;
     box-shadow: 0 0.8rem 1rem rgba(17, 17, 17, 0.15);
@@ -91,7 +91,7 @@ main{
 
 .sound-item-loader {
     color: white;
-    background-color: #ff5500;
+    background-color: FF5500;
     border-radius: 1px;
     margin-bottom: 1rem;
     padding: 0.5rem;
@@ -101,6 +101,7 @@ main{
     color: white;
     background-color: rgba(17, 17, 17,0.8);
     border-radius: 1px;
+    margin: 0rem 2rem;
     margin-bottom: 1rem;
     padding: 0.5rem;
 }
@@ -136,7 +137,7 @@ main{
 
 #sounds-upload__button, #sounds-upload__submit{
     -webkit-appearance: none;
-    background:  #f50;
+    background:  #FF5500;
     border:none;
     border-radius: 4px;
     outline: none;
@@ -153,13 +154,13 @@ main{
 }
 
 #sounds-upload__label {
+    max-width: 100%;
+    display: inline-block;
     color: #333;
     font-family: sans-serif;
-    max-width: 250px;
-    font-size: 12pt;
+    padding: 0.25rem;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
 }
 
 #upload-container .hidden{
@@ -209,3 +210,48 @@ main{
     height: 20px;
     cursor: pointer;
 }
+
+@media screen and (max-width: 1250px) {
+    #scene-container{
+        grid-template-columns: 1fr;
+    }
+
+    #sounds-container{
+        width: 100%;
+        height: inherit;
+        max-height: 50vh;
+    }
+
+    main{
+        text-align: center;
+    };
+}
+
+#presentation-container{
+    font-family: sans-serif;
+    background-color: white;
+    margin-bottom: 3rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+#presentation-container .title{
+    text-align: center;
+    padding: 1rem 0rem;
+    background-color: #FF5500;
+    color: white;
+    margin: 0;
+}
+
+#presentation-container .content-container{
+    padding: 1rem;
+    color: #333;
+}
+
+#presentation-container .content-container li{
+    padding: 0.5rem;
+}
+
+#presentation-container .content-container ol{
+    margin: 0;
+}
+

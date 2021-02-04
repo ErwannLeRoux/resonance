@@ -30,8 +30,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
   uploadLabel.textContent = defaultLabelText;
   uploadLabel.title       = defaultLabelText;
-  canvas.width  = canvasContainer.clientWidth
-  canvas.height = canvasContainer.clientHeight
+
+  if(window.innerWidth <= 1250){
+    canvas.width  = canvasContainer.clientWidth
+    canvas.height = 400
+  }else{
+    canvas.width  = canvasContainer.clientWidth
+    canvas.height = canvasContainer.clientHeight
+  }
+
+
+  window.addEventListener('resize', function(e) {
+    canvas.width  = 0
+    canvas.height = 0
+    console.log(window.screen.width)
+    if(window.innerWidth <= 1250){
+      console.log('eled')
+      canvas.width  = canvasContainer.clientWidth
+      canvas.height = 400
+    }else{
+      canvas.width  = canvasContainer.clientWidth
+      canvas.height = canvasContainer.clientHeight
+    }
+    
+  })
 
   playButton.addEventListener('click', function(e) {
     /* Chrome doesn't allow audio context creation until user action */
